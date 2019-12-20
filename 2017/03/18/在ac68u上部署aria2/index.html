@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="好好的 aria2 + frp 突然就不能用了，经过检查发现路由器挂载的移动硬盘数据全无，重新安装并记录如下： 系统：merlin 380.65_2 搭配 500G 移动硬盘 通过 ssh 链接到路由器。格式化移动硬盘至两个分区，方法见此链接。格式化后如果只挂在一个分区，重启路由即可。 ssh 到路由器执行 entware-setup.sh 安装 opkg，选择硬盘分区至 entware 下。 1">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://ww3.sinaimg.cn/large/006tKfTcly1fdqrpunisij31kw10sti3.jpg">
+<meta property="og:image" content="https://1oo1.github.io/images/006tKfTcly1fdqrpunisij31kw10sti3.jpg">
 <meta property="article:published_time" content="2017-03-18T15:06:38.000Z">
-<meta property="article:modified_time" content="2019-12-20T15:29:50.613Z">
+<meta property="article:modified_time" content="2019-12-20T16:32:58.439Z">
 <meta property="article:author" content="1oo1">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ww3.sinaimg.cn/large/006tKfTcly1fdqrpunisij31kw10sti3.jpg">
+<meta name="twitter:image" content="https://1oo1.github.io/images/006tKfTcly1fdqrpunisij31kw10sti3.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Blog" type="application/atom+xml">
   
@@ -106,7 +106,7 @@
 <p>部署到路由器：</p>
 <p>把 frpc 放到 /opt/bin/<br>把 frpc.ini 放到 /opt/etc<br>启动测试 frpc</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/bin/frpc -c /opt/etc/frpc.ini</span><br></pre></td></tr></table></figure>
-<p>在浏览器中输入 <a href="http://aria2.yourdomain.com:8000" target="_blank" rel="noopener">http://aria2.yourdomain.com:8000</a> 会弹出输入账号和密码，输入 frpc.ini 中配置好的账号密码即可看到部署到路由器上的 Aria2WebUI, 因为没有配置 aria2 所以会报错，在 WebUI 上找到 设置–&gt;连接设置 如图：<br><img src="https://ww3.sinaimg.cn/large/006tKfTcly1fdqrpunisij31kw10sti3.jpg" alt=""></p>
+<p>在浏览器中输入 <a href="http://aria2.yourdomain.com:8000" target="_blank" rel="noopener">http://aria2.yourdomain.com:8000</a> 会弹出输入账号和密码，输入 frpc.ini 中配置好的账号密码即可看到部署到路由器上的 Aria2WebUI, 因为没有配置 aria2 所以会报错，在 WebUI 上找到 设置–&gt;连接设置 如图：<br><img src="/images/006tKfTcly1fdqrpunisij31kw10sti3.jpg" alt=""></p>
 <p>提示连接成功说明以上操作均无问题 ctrl+c 关闭frpc。</p>
 <p>下面是设置frpc自启动并且定时重新执行</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vi /jffs/scripts/services-start</span><br><span class="line"><span class="comment">#在文件最后换行添加以下命令</span></span><br><span class="line">nohup /opt/bin/frpc -c /opt/etc/frpc.ini &gt;/dev/null 2&gt;&amp;1 &amp;</span><br><span class="line">cru a frpc_cron <span class="string">"25 7,12,17 * * * /opt/bin/frpc -c /opt/etc/frpc.ini"</span></span><br><span class="line"><span class="comment"># 每天的 7:25，12:25， 17:25 定时执行启动</span></span><br><span class="line">vi /jffs/scripts/services-stop</span><br><span class="line"><span class="comment">#在文件最后换行添加</span></span><br><span class="line">cru d frpc_cron</span><br><span class="line">/jffs/scripts/services-stop</span><br><span class="line">/jffs/scripts/services-start</span><br><span class="line"><span class="comment">#查看是否正确执行</span></span><br><span class="line">ps | grep frpc</span><br><span class="line"><span class="comment">#上面的命令执行后可以用此命令杀死 frpc 进程</span></span><br><span class="line"><span class="built_in">kill</span> -9 pid_number</span><br></pre></td></tr></table></figure>
